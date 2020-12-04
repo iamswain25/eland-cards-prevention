@@ -1,0 +1,20 @@
+{
+  "name": "eland",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "@types/bluebird": "^3.5.33",
+    "@types/line-reader": "^0.0.30",
+    "apollo-boost": "^0.4.9",
+    "bluebird": "^3.7.2",
+    "cross-fetch": "^3.0.6",
+    "dotenv": "^8.2.0",
+    "graphql": "^15.4.0",
+    "line-reader": "^0.4.0",
+    "typescript": "^4.1.2"
+  },
+  "scripts": {
+    "start": "tsc && node ./lib/index.js"
+  }
+}
