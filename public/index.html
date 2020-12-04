@@ -1,0 +1,68 @@
+<html>
+  <head>
+    <title>이랜드 유출 카드 조회</title>
+  </head>
+  <body>
+    <section>
+      <h2>마지막 4자리 카드번호로 내 카드가 유출 되었는지 조회하세요</h2>
+      <h4>
+        유출된 99999개 카드 번호 중, 유효기간이 20년12월 이후인 85330개의 카드를
+        조회 합니다.
+      </h4>
+      <input
+        type="text"
+        maxlength="4"
+        minlength="4"
+        id="last_four"
+        onkeydown="keydown(event)"
+      />
+      <button id="search">조회</button>
+    </section>
+    <section>
+      <h2 id="h3">유출카드 목록</h2>
+      <ul id="container"></ul>
+    </section>
+  </body>
+  <script>
+    function keydown(ev) {
+      if (ev.keyCode === 13) {
+        getData();
+      }
+    }
+    function getData() {
+      const four = document.querySelector("#last_four").value;
+      const container = document.querySelector("#container");
+      const query = `query($four: String!){
+      results: eland_get_pan_by_last_four_digit(args:{four: $four}){
+        pan
+      }
+    }`;
+      const variables = { four };
+      window
+        .fetch("https://api.parti.mx/v1/graphql", {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            mode: "no-cors",
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+          },
+          body: JSON.stringify({ variables, query }),
+        })
+        .then((res) => res.json())
+        .then((res) => res.data.results)
+        .then((arr) => arr.map((card) => card.pan))
+        .then((arr) => {
+          container.innerHTML = "";
+          arr.forEach((a) => {
+            const li = document.createElement("li");
+            li.appendChild(document.createTextNode(a));
+            container.appendChild(li);
+          });
+        });
+    }
+    (function () {
+      document.querySelector("#search").addEventListener("mousedown", getData);
+    })();
+  </script>
+</html>
